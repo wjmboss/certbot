@@ -332,7 +332,7 @@ def _renew_describe_results(config, renew_successes, renew_failures,
         notify("**          (The test certificates below have not been saved.)")
     notify("")
     if renew_skipped:
-        eotify("The following certs are not due for renewal yet:")
+        notify("The following certs are not due for renewal yet:")
         notify(report(renew_skipped, "skipped"))
     if not renew_successes and not renew_failures:
         notify("No renewals were attempted.")
