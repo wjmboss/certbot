@@ -332,7 +332,7 @@ def _renew_describe_results(config, renew_successes, renew_failures,
         notify("**          (The test certificates below have not been saved.)")
     notify("")
     if renew_skipped:
-        notify("The following certs are not due for renewal yet:")
+        eotify("The following certs are not due for renewal yet:")
         notify(report(renew_skipped, "skipped"))
     if not renew_successes and not renew_failures:
         notify("No renewals were attempted.")
@@ -425,7 +425,10 @@ def handle_renewal_request(config):
                     main.renew_cert(lineage_config, plugins, renewal_candidate)
                     renew_successes.append(renewal_candidate.fullchain)
                 else:
-                    renew_skipped.append(renewal_candidate.fullchain)
+                    expiry = crypto_util.notAfter(lineage.version(
+                        "cert", lineage.latest_common_version()))
+                    renew_skipped.append("%s expires on %s", renewal_candidate.fullchain,
+                                         expiry.strftme("%Y-%m-%d"))
         except Exception as e:  # pylint: disable=broad-except
             # obtain_cert (presumably) encountered an unanticipated problem.
             logger.warning("Attempting to renew cert (%s) from %s produced an "
